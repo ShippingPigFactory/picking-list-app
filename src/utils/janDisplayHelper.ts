@@ -31,7 +31,7 @@ export function formatJanDisplay(janCode?: string): string {
   // JANコードが例外マップに存在するかチェック
   if (JAN_EXCEPTION_MAP[janCode]) {
     // 存在すれば、マップに定義された文字列を返す
-    return JAN_EXCEPTION_MAP[janCode];
+    return JAN_EXCEPTION_MAP[janCode].slice(-4);
   }
 
   // どの例外にも当てはまらない場合は、通常通り末尾4桁を返す

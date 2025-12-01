@@ -1,7 +1,6 @@
 import React from 'react';
 import type { OrderItem, PickingItemRow } from "../types";
 import { formatJanDisplay } from '@/utils/janDisplayHelper';
-import { calculateSetCount } from '../utils/itemCalculations';
 import { SELECTABLE_SERIES_SKU_MAP } from '@/utils/exceptionProducts';
 
 interface PrintableProps {
@@ -25,7 +24,6 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
     multiItemOrders,
     shippingNotes,
     uniqueOrderCount,
-    sheet
   }, ref) => {
     
     return (

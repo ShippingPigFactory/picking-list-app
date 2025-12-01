@@ -93,7 +93,7 @@ function Home() {
       });
 
     return filteredAndMappedData;
-  }, [data]);
+  }, [data, sheetData]);
   
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
