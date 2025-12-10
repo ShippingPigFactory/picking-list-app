@@ -8,15 +8,15 @@
  */
 export const SELECTABLE_SERIES_SKU_MAP: { [key: string]: boolean } = {
     // ワイドハイターEXパワー 衣料用漂白剤 詰替用2400ml【選べる個数】
-    'A070308-J7102-1': true,
-    '070305-809': true,
-    'b0c57ygxrj-2': true,
-    'st000384-B0C57YGXRJ-SET2': true,
-    'b0c57ygxrj-4': true,
-    'st000384-B0C57YGXRJ-SET4': true,
-    'st000384-B0C57YGXRJ-SET6': true,
-    'B0C57YGXRJ-6': true,
-    'unknown-20240920-ukn-b0c57zprmz-3080': true,
+    // 'A070308-J7102-1': true,
+    // '070305-809': true,
+    // 'b0c57ygxrj-2': true,
+    // 'st000384-B0C57YGXRJ-SET2': true,
+    // 'b0c57ygxrj-4': true,
+    // 'st000384-B0C57YGXRJ-SET4': true,
+    // 'st000384-B0C57YGXRJ-SET6': true,
+    // 'B0C57YGXRJ-6': true,
+    // 'unknown-20240920-ukn-b0c57zprmz-3080': true,
 
     // 無印洗顔フォーム
     'B08DTXNL8X-500-4549337280724': true,
