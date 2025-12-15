@@ -17,7 +17,6 @@ interface Props {
 
 const PickingList: React.FC<Props> = ({ data, shippingMethod, loadedAt, sheet, excludedItemsCount, shippingNotes, onDataCalculated }) => {
   const [isSorted, setIsSorted] = useState<boolean>(true);
-  console.log(data);
 
 // 1. フックからソートされていない「生」のリストを受け取る
   const { rawPickingList, totalSingleUnits } = usePickingLogic(data, sheet);

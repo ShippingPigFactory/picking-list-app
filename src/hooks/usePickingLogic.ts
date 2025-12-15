@@ -3,10 +3,68 @@
 import { useMemo } from "react";
 import type { OrderItem, PickingItemRow } from "../types";
 
+// マスタCSVのヘッダー名定義
+// ご提示いただいたB列からのヘッダーリストに基づき設定
+const HEADER_MAP = {
+  sku: "商品SKU",
+  jan: "JAN",
+  parentAsin: "親ASIN",
+  setCount: "SET数",
+  parentAsin2: "親ASIN-2",
+  parentJan2: "親JAN-2",
+  setCount2: "SET-2",
+  childAsin: "子ASIN",
+  productName: "親",        // リスト内に「親」が2箇所あるため、ロジック内で lastIndexOf を使用して後ろ側(SKU横)を優先します
+  migrationSource: "引継ぎ元",
+  migrationTarget: "引継ぎ先"
+};
+
 export function usePickingLogic(data: OrderItem[], sheet: string[][]) {
   
   const { rawPickingList, totalSingleUnits } = useMemo(() => {
-    console.log("=============== usePickingLogic 再計算開始 (確定ロジック) ===============");
+    console.log("=============== usePickingLogic 再計算開始 (ヘッダー動的特定版) ===============");
+    
+    // シートが空、またはヘッダー行がない場合は空の結果を返す
+    if (!sheet || sheet.length === 0) {
+      console.warn("マスタデータが存在しません。");
+      return { rawPickingList: [], totalSingleUnits: 0 };
+    }
+
+    // 1行目をヘッダーとして取得
+    const headers = sheet[0];
+    
+    // ヘッダー名から列インデックスを特定するヘルパー関数
+    const getColIndex = (key: string, defaultIdx: number) => {
+      const idx = headers.indexOf(key);
+      if (idx === -1) {
+        console.warn(`[警告] ヘッダー "${key}" が見つかりません。デフォルトの列番号(${defaultIdx})を使用します。`);
+        return defaultIdx;
+      }
+      return idx;
+    };
+
+    // 各カラムのインデックスを計算
+    const colIdx = {
+      sku: getColIndex(HEADER_MAP.sku, 16),
+      jan: getColIndex(HEADER_MAP.jan, 5),
+      parentAsin: getColIndex(HEADER_MAP.parentAsin, 4),
+      setCount: getColIndex(HEADER_MAP.setCount, 6),
+      parentAsin2: getColIndex(HEADER_MAP.parentAsin2, 7),
+      parentJan2: getColIndex(HEADER_MAP.parentJan2, 8),
+      setCount2: getColIndex(HEADER_MAP.setCount2, 9),
+      childAsin: getColIndex(HEADER_MAP.childAsin, 10),
+      
+      // 「親」列は重複しているため、lastIndexOfを使って後ろ側（SKUの隣）を優先的に取得する
+      productName: headers.lastIndexOf(HEADER_MAP.productName) !== -1 
+        ? headers.lastIndexOf(HEADER_MAP.productName) 
+        : 17, // 見つからない場合はデフォルト17
+      
+      migrationSource: getColIndex(HEADER_MAP.migrationSource, 21),
+      migrationTarget: getColIndex(HEADER_MAP.migrationTarget, 22),
+    };
+
+    console.log("特定された列インデックス:", colIdx);
+
     const map = new Map<string, PickingItemRow>();
 
     data.forEach((item) => {
@@ -28,35 +86,56 @@ export function usePickingLogic(data: OrderItem[], sheet: string[][]) {
       let productName = productNameForItem;
       let parentQuantity: number | undefined = undefined;
 
-      // --- STEP 1: 新しいロジックでqRowを特定 (確定版) ---
+      // --- STEP 1: マスタ行(qRow)を特定 ---
       const itemSku = item["商品SKU"];
-      const skuKanri = item["SKU管理番号"]; // '商品コード' ではなく 'SKU管理番号'
+      const skuKanri = item["SKU管理番号"];
 
-      console.log(`[qRow特定] 優先1(商品SKU): "${itemSku || '空'}", 優先2(SKU管理番号): "${skuKanri || '空'}" でQ列を検索`);
+      console.log(`[qRow特定] 優先1(商品SKU): "${itemSku || '空'}", 優先2(SKU管理番号): "${skuKanri || '空'}" で検索`);
 
-      const qRow = 
-        (itemSku && sheet.find(r => r[16]?.toLowerCase() === itemSku.toLowerCase())) ||
-        (skuKanri && sheet.find(r => r[16]?.toLowerCase() === skuKanri.toLowerCase()));
+      // SKUカラム(colIdx.sku)を使って検索
+      let qRow = 
+        (itemSku && sheet.find(r => r[colIdx.sku]?.toLowerCase() === itemSku.toLowerCase())) ||
+        (skuKanri && sheet.find(r => r[colIdx.sku]?.toLowerCase() === skuKanri.toLowerCase()));
+
+      // --- STEP 1.5: 引継ぎロジック (引継ぎ元 -> 引継ぎ先) ---
+      if (qRow) {
+        // 引継ぎ元カラムを確認
+        const sourceValue = qRow[colIdx.migrationSource];
+        
+        if (sourceValue && sourceValue.trim() !== "") {
+          console.log(` -> [引継ぎ確認] "${HEADER_MAP.migrationSource}"列に値 "${sourceValue}" を発見。"${HEADER_MAP.migrationTarget}"列を検索します。`);
+          
+          // 引継ぎ先カラムが sourceValue と一致する行を探す
+          const targetRow = sheet.find(r => r[colIdx.migrationTarget] === sourceValue);
+
+          if (targetRow) {
+            console.log(" -> [引継ぎ成功] 引継ぎ先の行が見つかりました。行を差し替えます。");
+            qRow = targetRow;
+          } else {
+            console.warn(` -> [引継ぎ警告] "${HEADER_MAP.migrationTarget}"列が "${sourceValue}" の行が見つかりませんでした。元の行を使用します。`);
+          }
+        }
+      }
 
       // --- STEP 2: qRowが見つかった場合の処理 ---
       if (qRow) {
-        console.log(" -> [SUCCESS] qRowを発見:", qRow);
+        console.log(" -> [SUCCESS] 確定qRow:", qRow);
 
-        const parentAsin = qRow[7]; // H列 (親ASIN-2)
+        const parentAsin = qRow[colIdx.parentAsin2]; // 親ASIN-2
 
         if (parentAsin && parentAsin.trim() !== '') {
           // 【セット商品の場合】
           console.log(" -> [判定] セット商品として処理します。");
           
-          parentJan = qRow[8]; // I列 (親JAN-2)
-          const parentSetCount = parseInt(qRow[9] || '1', 10); // J列 (SET-2)
+          parentJan = qRow[colIdx.parentJan2]; // 親JAN-2
+          const parentSetCount = parseInt(qRow[colIdx.setCount2] || '1', 10); // SET-2
           parentQuantity = parentSetCount * csvCount;
           
-          jan = qRow[5]; // F列 (JAN)
-          setCount = parseInt(qRow[6] || '1', 10); // G列 (SET数)
-          productName = qRow[17] || productNameForItem; // R列 (親)
+          jan = qRow[colIdx.jan]; // JAN
+          setCount = parseInt(qRow[colIdx.setCount] || '1', 10); // SET数
+          productName = qRow[colIdx.productName] || productNameForItem; // 親(商品名)
 
-          const childAsin = qRow[10]; // K列 (子ASIN)
+          const childAsin = qRow[colIdx.childAsin]; // 子ASIN
           console.log(`   -> 親JAN: ${parentJan}, 親SET数: ${parentSetCount}, 親ASIN: ${parentAsin}`);
           console.log(`   -> 子JAN: ${jan}, 子SET数: ${setCount}, 子ASIN: ${childAsin}`);
 
@@ -64,10 +143,10 @@ export function usePickingLogic(data: OrderItem[], sheet: string[][]) {
           // 【通常商品の場合】
           console.log(" -> [判定] 通常商品として処理します。");
 
-          const asin = qRow[4]; // E列 (親ASIN)
-          jan = qRow[5]; // F列 (JAN)
-          setCount = parseInt(qRow[6] || '1', 10); // G列 (SET数)
-          productName = qRow[17] || productNameForItem; // R列 (親)
+          const asin = qRow[colIdx.parentAsin]; // 親ASIN
+          jan = qRow[colIdx.jan]; // JAN
+          setCount = parseInt(qRow[colIdx.setCount] || '1', 10); // SET数
+          productName = qRow[colIdx.productName] || productNameForItem; // 親(商品名)
           console.log(`   -> ASIN: ${asin}, JAN: ${jan}, SET数: ${setCount}`);
         }
         
