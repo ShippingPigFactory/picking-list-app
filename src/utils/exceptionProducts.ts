@@ -36,12 +36,12 @@ export const SELECTABLE_SERIES_SKU_MAP: { [key: string]: boolean } = {
     '2024-0927-53905': true,
 
     // ケイト アイライナー スーパーシャ―プライナー EX3.0 【カラー】BK-1 BR-1 BR-2 【選べる】
-    'B09TQSYWXV-v3867-1': true,
-    'B09TQSYWXV-v3867-3': true,
-    'B09TQSBC4R-v3874-1': true,
-    'B09TQSBC4R-v3874-3': true,
-    'B09TQRR9PZ-v3881-1': true,
-    'B09TQRR9PZ-v3881-3': true,
+    // 'B09TQSYWXV-v3867-1': true,
+    // 'B09TQSYWXV-v3867-3': true,
+    // 'B09TQSBC4R-v3874-1': true,
+    // 'B09TQSBC4R-v3874-3': true,
+    // 'B09TQRR9PZ-v3881-1': true,
+    // 'B09TQRR9PZ-v3881-3': true,
 
     // JOOMO 
     'maker-B0C1JXDG1F-1561': true,

@@ -159,6 +159,13 @@ export function usePickingLogic(data: OrderItem[], sheet: string[][]) {
       console.log(`【最終SET数】: ${setCount}`);
       console.log(`【最終数量】: ${singleUnits} (計算式: ${setCount} * ${csvCount})`);
 
+      console.log(`[ピッキング集計] 商品名: ${productName}`);
+      console.log(`  -> 取得JAN: "${jan}"`);
+      console.log(`  -> 単品換算数: ${singleUnits}`);
+      if (jan === "") {
+        console.warn(`  -> 警告: JANが空です。マスタのJAN列を確認してください。`);
+      }
+
       // --- 集計プロセス ---
       const mapKey = jan || productName;
       if (map.has(mapKey)) {

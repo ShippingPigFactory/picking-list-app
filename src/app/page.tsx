@@ -72,9 +72,13 @@ function Home() {
 
         const janFromSheet = findJanCode(item, sheetData);
 
+        if (janFromSheet === '') {
+          console.log(`[複数個注文計算] SKU: ${item['商品SKU']} はマスタにJANがありません。`);
+        }
+
         return {
           ...item,
-          'JANコード': janFromSheet || item['JANコード'],
+          'JANコード': janFromSheet || '', 
           '計算後総個数': calculatedTotal,
         } as OrderItem;
       })
