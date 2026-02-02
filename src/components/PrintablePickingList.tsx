@@ -81,6 +81,8 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
           <thead>
             <tr>
               <th className="check">P</th>
+              <th className="doubleCheck">セルフ</th>
+              <th className="doubleCheck">ダブル</th>
               <th className="itemName">商品名</th>
               <th className="jan">JAN</th>
               <th className="other">仕分け</th>
@@ -98,6 +100,8 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
             {pickingList.map((item, index) => (
               <tr key={`${item.JANコード}-${item.商品名}-${index}`}>
                 <td className="check"></td>
+                <td className="doubleCheck"></td>
+                <td className="doubleCheck"></td>
                 <td className="itemName">{item.商品名}</td>
                 <td className="jan">
                   <span className="jan">{formatJanDisplay(item.JANコード)}</span>
@@ -131,6 +135,8 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
           <tbody>
             <tr>
               <td className="check">&nbsp;</td>
+              <td className="doubleCheck">&nbsp;</td>
+              <td className="doubleCheck">&nbsp;</td>
               <td className="itemName">&nbsp;</td>
               <td className="jan">&nbsp;</td>
               <td className="other">&nbsp;</td>
@@ -147,6 +153,8 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
           <tfoot>
             <tr className="footer-row">
               <td className="check">合計</td>
+              <td className="doubleCheck"></td>
+              <td className="doubleCheck"></td>
               <td className="itemName"></td>
               <td className="jan"></td>
               <td className="other"></td>
