@@ -273,7 +273,7 @@ tbody tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
-.jan, .count, .case, .box, .other {
+.jan, .count, .case, .box {
   width: 5%;
   min-width: fit-content;
   text-align: center;
@@ -284,11 +284,7 @@ tbody tr:nth-child(even) {
   font-weight: bold;
 }
 
-.check, .doubleCheck {
-  width: 3%;
-}
-
-.doubleCheck {
+.check, .doubleCheck, .assort {
   width: 3%;
   writing-mode: vertical-rl;
 }
