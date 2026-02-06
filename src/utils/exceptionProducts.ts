@@ -51,4 +51,6 @@ export const SELECTABLE_SERIES_SKU_MAP: { [key: string]: boolean } = {
 
     // 他の【選べる】シリーズ商品があれば、ここに追記
     // 'some-other-product-sku': true,
+    'A1569-071015-j9412-S4': true,
+    'A1551-071008-j9382-S4': true,
 };
