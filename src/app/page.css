@@ -267,13 +267,15 @@ th {
 
 thead tr {
   background-color: #f2f2f2;
+  background-color: #f9f9f9;
 }
 
 tbody tr:nth-child(even) {
   background-color: #f9f9f9;
+  background-color: #f2f2f2;
 }
 
-.jan, .count, .case, .box, .other {
+.check, .jan, .count, .case, .box, .other {
   width: 5%;
   min-width: fit-content;
   text-align: center;
@@ -284,9 +286,17 @@ tbody tr:nth-child(even) {
   font-weight: bold;
 }
 
-.check, .doubleCheck, .assort {
+.picking, .selfCheck, .doubleCheck, .assort {
   width: 3%;
   writing-mode: vertical-rl;
+}
+
+.assort, .doubleCheck, .case, .other {
+  background-color: #e6e6e6;
+}
+
+.picking, .selfCheck, .itemName, .jan, .count {
+  background-color: #fff;
 }
 
 td.itemName {
