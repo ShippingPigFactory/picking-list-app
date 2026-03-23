@@ -76,6 +76,29 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
           <div className="grid-input col-span2 fs16">{uniqueOrderCount}</div>
         </div>
 
+        {/* 2.5 梱包サイズ集計エリア */}
+        <div className="work-log-grid" style={{ marginTop: '0px' }}>
+          {/* Row 1: Headers (8 items * 3 cols = 24 cols) */}
+          <div className="grid-header col-span3" style={{ fontSize: '0.9rem', lineHeight: '1.2' }}>ネコポス<br/>(封筒)</div>
+          <div className="grid-header col-span3" style={{ fontSize: '0.9rem', lineHeight: '1.2' }}>ネコポス<br/>(箱)</div>
+          <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>コンパクト</div>
+          <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>60サイズ</div>
+          <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>100サイズ</div>
+          <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>120サイズ</div>
+          <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>140サイズ</div>
+          <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>160サイズ</div>
+
+          {/* Row 2: Inputs */}
+          <div className="grid-input col-span3" style={{ height: '25px' }}></div>
+          <div className="grid-input col-span3"></div>
+          <div className="grid-input col-span3"></div>
+          <div className="grid-input col-span3"></div>
+          <div className="grid-input col-span3"></div>
+          <div className="grid-input col-span3"></div>
+          <div className="grid-input col-span3"></div>
+          <div className="grid-input col-span3"></div>
+        </div>
+
         {/* 1. ヘッダーだけのテーブル */}
         <table className="print-table">
           <thead>
