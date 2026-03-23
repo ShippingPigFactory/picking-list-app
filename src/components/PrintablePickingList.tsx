@@ -83,10 +83,10 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
           <div className="grid-header col-span3" style={{ fontSize: '0.9rem', lineHeight: '1.2' }}>ネコポス<br/>(箱)</div>
           <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>コンパクト</div>
           <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>60サイズ</div>
+          <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>80サイズ</div>
           <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>100サイズ</div>
           <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>120サイズ</div>
           <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>140サイズ</div>
-          <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>160サイズ</div>
 
           {/* Row 2: Inputs */}
           <div className="grid-input col-span3" style={{ height: '25px' }}></div>
