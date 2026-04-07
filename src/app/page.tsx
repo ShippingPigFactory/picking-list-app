@@ -98,6 +98,24 @@ function Home() {
 
     return filteredAndMappedData;
   }, [data, sheetData]);
+
+  // 【選べる】シリーズ商品だけをフィルタリング（JAN確認用リスト用）
+  const selectableSeriesOrders: OrderItem[] = useMemo(() => {
+    return data
+      .filter(item => {
+        const itemSku = item['商品SKU'];
+        return itemSku ? SELECTABLE_SERIES_SKU_MAP[itemSku] === true : false;
+      })
+      .map(item => {
+        const calculatedTotal = calculateSetCount(item, sheetData) * (parseInt(item['個数'], 10) || 0);
+        const janFromSheet = findJanCode(item, sheetData);
+        return {
+          ...item,
+          'JANコード': janFromSheet || '',
+          '計算後総個数': calculatedTotal,
+        } as OrderItem;
+      });
+  }, [data, sheetData]);
   
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -250,6 +268,7 @@ function Home() {
                     loadedAt={loadedAt}
                     shippingNotes={shippingNotes}
                     multiItemOrders={multiItemOrders}
+                    selectableSeriesOrders={selectableSeriesOrders}
                     uniqueOrderCount={uniqueOrderCount}
                     sheet={sheetData}
                   />

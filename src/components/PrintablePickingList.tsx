@@ -9,6 +9,7 @@ interface PrintableProps {
   loadedAt: string;
   totalSingleUnits: number;
   multiItemOrders: OrderItem[];
+  selectableSeriesOrders: OrderItem[];
   shippingNotes: string[];
   uniqueOrderCount: number;
   sheet: string[][];
@@ -22,6 +23,7 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
     loadedAt, 
     totalSingleUnits, 
     multiItemOrders,
+    selectableSeriesOrders,
     shippingNotes,
     uniqueOrderCount,
   }, ref) => {
@@ -222,6 +224,40 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
                       <td>{item['商品名']}</td>
                       <td style={{ fontSize: 16, textAlign: 'center', fontWeight: 'bold' }}>{displayQuantity}</td>
                       <td style={{ fontSize: 16, textAlign: 'center', fontWeight: 'bold' }}>{formatJanDisplay(item['JANコード'].slice(-4))}</td>
+                      <td className="other"></td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* JAN確認用リストが1件以上ある場合のみ、このセクションを描画 */}
+        {selectableSeriesOrders.length > 0 && (
+          <div className="multi-order-list-container" style={{ marginTop: '20px' }}>
+            <h2>JAN確認用リスト</h2>
+            <table className="print-table">
+              <thead>
+                <tr>
+                  <th style={{ width: '7%' }}>GoQ管理番号</th>
+                  {/* <th style={{ width: '15%' }}>受注番号</th> */}
+                  <th style={{ width: '15%' }}>送付先氏名</th>
+                  <th style={{ flex: 1 }}>商品名</th>
+                  <th style={{ width: '5%' }}>個数</th>
+                  <th style={{ width: '10%' }}>JANコード</th>
+                  <td className="other">チェック</td>
+                </tr>
+              </thead>
+              <tbody>
+                {selectableSeriesOrders.map((item, index) => {
+                  return (
+                    <tr key={`selectable-${item.受注番号}-${index}`}>
+                      <td>{item['GoQ管理番号']}</td>
+                      <td>{item['送付先氏名']}</td>
+                      <td>{item['商品名']}</td>
+                      <td style={{ fontSize: 16, textAlign: 'center', fontWeight: 'bold' }}>{item['計算後総個数']}</td>
+                      <td style={{ fontSize: 16, textAlign: 'center', fontWeight: 'bold' }}>{formatJanDisplay(item['JANコード'] ? item['JANコード'].slice(-4) : '')}</td>
                       <td className="other"></td>
                     </tr>
                   );
