@@ -1,7 +1,7 @@
 import React from 'react';
 import type { OrderItem, PickingItemRow } from "../types";
 import { formatJanDisplay } from '@/utils/janDisplayHelper';
-import { SELECTABLE_SERIES_SKU_MAP } from '@/utils/exceptionProducts';
+import { isSpecialQuantityCalculationRequired } from '@/utils/janCheckProducts';
 
 interface PrintableProps {
   pickingList: PickingItemRow[];
@@ -9,7 +9,7 @@ interface PrintableProps {
   loadedAt: string;
   totalSingleUnits: number;
   multiItemOrders: OrderItem[];
-  selectableSeriesOrders: OrderItem[];
+  janCheckOrders: OrderItem[];
   shippingNotes: string[];
   uniqueOrderCount: number;
   sheet: string[][];
@@ -23,7 +23,7 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
     loadedAt, 
     totalSingleUnits, 
     multiItemOrders,
-    selectableSeriesOrders,
+    janCheckOrders,
     shippingNotes,
     uniqueOrderCount,
   }, ref) => {
@@ -211,9 +211,8 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
               </thead>
               <tbody>
                 {multiItemOrders.map((item, index) => {
-                  const itemSku = item['商品SKU'];
-                  const isSelectableSeries = itemSku ? SELECTABLE_SERIES_SKU_MAP[itemSku] === true : false;
-                  const displayQuantity = isSelectableSeries ? item['計算後総個数']! : item['個数'];
+                  const isSpecialCalc = isSpecialQuantityCalculationRequired(item);
+                  const displayQuantity = isSpecialCalc ? item['計算後総個数']! : item['個数'];
 
 
                   return (
@@ -234,7 +233,7 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
         )}
 
         {/* JAN確認用リストが1件以上ある場合のみ、このセクションを描画 */}
-        {selectableSeriesOrders.length > 0 && (
+        {janCheckOrders.length > 0 && (
           <div className="multi-order-list-container" style={{ marginTop: '20px' }}>
             <h2>JAN確認用リスト</h2>
             <table className="print-table">
@@ -250,7 +249,7 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
                 </tr>
               </thead>
               <tbody>
-                {selectableSeriesOrders.map((item, index) => {
+                {janCheckOrders.map((item, index) => {
                   return (
                     <tr key={`selectable-${item.受注番号}-${index}`}>
                       <td>{item['GoQ管理番号']}</td>

@@ -12,7 +12,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { useSheetNames } from '../hooks/useSheetNames';
 import './page.css';
 import { calculateSetCount, findJanCode } from '@/utils/itemCalculations';
-import { SELECTABLE_SERIES_SKU_MAP } from '@/utils/exceptionProducts';
+import { isJanCheckRequired, isSpecialQuantityCalculationRequired } from '@/utils/janCheckProducts';
 
 function Home() {
   const [data, setData] = useState<OrderItem[]>([]);
@@ -85,11 +85,9 @@ function Home() {
       .filter(item => {
         const csvQuantity = parseInt(item['個数'], 10) || 0;
         const totalQuantity = item['計算後総個数']!;
-        const itemSku = item['商品SKU']; // 商品SKUを取得
+        const isSpecialCalc = isSpecialQuantityCalculationRequired(item);
 
-        const isSelectableSeries = itemSku ? SELECTABLE_SERIES_SKU_MAP[itemSku] === true : false;
-
-        if (isSelectableSeries) {
+        if (isSpecialCalc) {
           return totalQuantity >= 2;
         } else {
           return csvQuantity >= 2;
@@ -99,13 +97,10 @@ function Home() {
     return filteredAndMappedData;
   }, [data, sheetData]);
 
-  // 【選べる】シリーズ商品だけをフィルタリング（JAN確認用リスト用）
-  const selectableSeriesOrders: OrderItem[] = useMemo(() => {
+  // JAN確認が必要な商品だけをフィルタリング（JAN確認用リスト用）
+  const janCheckOrders: OrderItem[] = useMemo(() => {
     return data
-      .filter(item => {
-        const itemSku = item['商品SKU'];
-        return itemSku ? SELECTABLE_SERIES_SKU_MAP[itemSku] === true : false;
-      })
+      .filter(item => isJanCheckRequired(item))
       .map(item => {
         const calculatedTotal = calculateSetCount(item, sheetData) * (parseInt(item['個数'], 10) || 0);
         const janFromSheet = findJanCode(item, sheetData);
@@ -268,7 +263,7 @@ function Home() {
                     loadedAt={loadedAt}
                     shippingNotes={shippingNotes}
                     multiItemOrders={multiItemOrders}
-                    selectableSeriesOrders={selectableSeriesOrders}
+                    janCheckOrders={janCheckOrders}
                     uniqueOrderCount={uniqueOrderCount}
                     sheet={sheetData}
                   />

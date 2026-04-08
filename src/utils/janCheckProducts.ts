@@ -1,0 +1,81 @@
+import { OrderItem } from '../types';
+
+/**
+ * JAN確認が必要な商品のSKUリスト。
+ * 後から追加したいアイテムがある場合は、ここにその商品の「商品SKU」とコメントを追記する。
+ */
+export const JAN_CHECK_SKU_MAP: { [key: string]: boolean } = {
+    // ワイドハイターEXパワー 衣料用漂白剤 詰替用2400ml【選べる個数】
+    'A070308-J7102-1': true,
+    '070305-809': true,
+    'b0c57ygxrj-2': true,
+    'st000384-B0C57YGXRJ-SET2': true,
+    'b0c57ygxrj-4': true,
+    'st000384-B0C57YGXRJ-SET4': true,
+    'st000384-B0C57YGXRJ-SET6': true,
+    'B0C57YGXRJ-6': true,
+    'unknown-20240920-ukn-b0c57zprmz-3080': true,
+    'A1728-071203-J7102-S4': true,
+
+    // 無印洗顔フォーム
+    'B08DTXNL8X-500-4549337280724': true,
+    'b00vgpkw10-3': true,
+    'A1331-070716-j0724-S10': true,
+
+    // ロコモプロ
+    'maker-B0CB1BGSK9-952': true,
+
+    // アサヒ スーパービール酵母Z 
+    'st000433-B0CKTZRQ5L-SET1': true,
+    '20240927－20156': true,
+    'A0001-070403-J6666-S1': true,
+    '20240927-3234': true,
+    'st000433-B0CKTZRQ5L-SET3': true,
+    '2024-0927-43125': true,
+    '2024-0927-53905': true,
+
+    // ケイト アイライナー スーパーシャ―プライナー EX3.0 【カラー】BK-1 BR-1 BR-2 【選べる】
+    // 'B09TQSYWXV-v3867-1': true,
+    // 'B09TQSYWXV-v3867-3': true,
+    // 'B09TQSBC4R-v3874-1': true,
+    // 'B09TQSBC4R-v3874-3': true,
+    // 'B09TQRR9PZ-v3881-1': true,
+    // 'B09TQRR9PZ-v3881-3': true,
+
+    // JOOMO 
+    'maker-B0C1JXDG1F-1561': true,
+
+    // 【まとめ買い6個】びっくらたまご アンパンマン シリーズ おそらでさんぽ編 バスボール 炭酸入浴剤
+    'A1446-070912-J1886-S6': true,
+
+    // 他のJAN確認が必要な商品があれば、ここに追記
+    'A1569-071015-j9412-S4': true,
+    'A1551-071008-j9382-S4': true,
+    'X00043-8888075073806-child01-box': true,
+    'X00041-8888075073752-child01-box': true,
+    'X00042-8888075073790-child01-box': true,
+    'X00044-8888075073745-child01-box': true,
+    'B0D8KY7J4T-071014-8888075080439': true,
+    'A2092-080228-J3806-S1': true,
+    'A2071-080224-J3790-S1': true,
+    'A2072-080224-J3752-S1': true,
+    'A2073-080224-J3745-S1': true,
+    'A2074-080224-J3769-S1': true,
+};
+
+/**
+ * 商品がJAN確認リストに含まれるべきかどうかを判定する。
+ */
+export function isJanCheckRequired(item: OrderItem): boolean {
+    const sku = item['商品SKU'];
+    if (!sku) return false;
+    return JAN_CHECK_SKU_MAP[sku] === true;
+}
+
+/**
+ * 商品が「選べるシリーズ」など、特殊な数量計算が必要な商品かどうかを判定する。
+ * (現在はJAN確認対象と同一だが、将来的に分かれる可能性を考慮)
+ */
+export function isSpecialQuantityCalculationRequired(item: OrderItem): boolean {
+    return isJanCheckRequired(item);
+}
