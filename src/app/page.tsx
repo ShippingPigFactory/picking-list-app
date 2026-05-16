@@ -57,10 +57,12 @@ function Home() {
     });
   }, [data, sheetData]);
 
-  // 除外されたアイテムの数を計算
-  const excludedItemsCount = useMemo(() => {
-    return data.length - validDataForPicking.length;
+  // マスタに存在しない（除外された）アイテムを計算
+  const excludedItems = useMemo(() => {
+    return data.filter(item => !validDataForPicking.includes(item));
   }, [data, validDataForPicking]);
+
+  const excludedItemsCount = excludedItems.length;
 
   // 個数が2個以上の注文データだけをフィルタリング
   const multiItemOrders: OrderItem[] = useMemo(() => {
@@ -264,6 +266,7 @@ function Home() {
                     shippingNotes={shippingNotes}
                     multiItemOrders={multiItemOrders}
                     janCheckOrders={janCheckOrders}
+                    anomalyOrders={excludedItems}
                     uniqueOrderCount={uniqueOrderCount}
                     sheet={sheetData}
                   />

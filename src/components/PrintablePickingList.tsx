@@ -10,6 +10,7 @@ interface PrintableProps {
   totalSingleUnits: number;
   multiItemOrders: OrderItem[];
   janCheckOrders: OrderItem[];
+  anomalyOrders: OrderItem[];
   shippingNotes: string[];
   uniqueOrderCount: number;
   sheet: string[][];
@@ -17,13 +18,14 @@ interface PrintableProps {
 
 // forwardRef を使って親から ref を受け取れるようにする
 const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
-  ({ 
-    pickingList, 
-    shippingMethod, 
-    loadedAt, 
-    totalSingleUnits, 
+  ({
+    pickingList,
+    shippingMethod,
+    loadedAt,
+    totalSingleUnits,
     multiItemOrders,
     janCheckOrders,
+    anomalyOrders,
     shippingNotes,
     uniqueOrderCount,
   }, ref) => {
@@ -261,6 +263,37 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
                     </tr>
                   );
                 })}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* 異常検知リストが1件以上ある場合のみ、このセクションを描画 */}
+        {anomalyOrders.length > 0 && (
+          <div className="multi-order-list-container" style={{ marginTop: '20px' }}>
+            <h2>⚠ 異常検知リスト（マスタ未登録）</h2>
+            <table className="print-table">
+              <thead>
+                <tr>
+                  <th style={{ width: '7%' }}>GoQ管理番号</th>
+                  <th style={{ width: '15%' }}>送付先氏名</th>
+                  <th style={{ flex: 1 }}>商品名</th>
+                  <th style={{ width: '5%' }}>個数</th>
+                  <th style={{ width: '18%' }}>商品SKU</th>
+                  <td className="other">対応</td>
+                </tr>
+              </thead>
+              <tbody>
+                {anomalyOrders.map((item, index) => (
+                  <tr key={`anomaly-${item['GoQ管理番号']}-${index}`}>
+                    <td>{item['GoQ管理番号']}</td>
+                    <td>{item['送付先氏名']}</td>
+                    <td>{item['商品名']}</td>
+                    <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{item['個数']}</td>
+                    <td style={{ fontSize: '0.75rem' }}>{item['商品SKU'] || item['商品コード'] || '—'}</td>
+                    <td className="other"></td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
