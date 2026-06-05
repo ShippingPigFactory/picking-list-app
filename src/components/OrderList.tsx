@@ -4,6 +4,7 @@ import React, { useMemo } from 'react';
 import type { OrderItem } from '../types';
 import { calculateSetCount, findJanCode } from '@/utils/itemCalculations';
 import { SELECTABLE_SERIES_SKU_MAP } from '@/utils/exceptionProducts';
+import { formatJanDisplay } from '@/utils/janDisplayHelper';
 
 interface Props {
   data: OrderItem[];
@@ -136,7 +137,7 @@ const OrderList: React.FC<Props> = ({ data, sheet, title, currentView }) => {
                   )}
                   {/* ★修正: 取得したマスタJANを表示（末尾4桁） */}
                   <td style={{ textAlign: "center", fontWeight: "bold" }}>
-                    {displayJan ? displayJan.slice(-4) : ''}
+                    {formatJanDisplay(displayJan)}
                   </td>
                   <td>{item['商品コード']}</td>
                 </tr>

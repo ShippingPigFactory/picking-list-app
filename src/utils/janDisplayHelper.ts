@@ -31,12 +31,14 @@ export function formatJanDisplay(janCode?: string): string {
     return '';
   }
 
+  const normalizedJanCode = janCode.trim();
+
   // JANコードが例外マップに存在するかチェック
-  if (JAN_EXCEPTION_MAP[janCode]) {
+  if (JAN_EXCEPTION_MAP[normalizedJanCode]) {
     // 存在すれば、マップに定義された文字列を返す
-    return JAN_EXCEPTION_MAP[janCode].slice(-4);
+    return JAN_EXCEPTION_MAP[normalizedJanCode].trim().slice(-4);
   }
 
   // どの例外にも当てはまらない場合は、通常通り末尾4桁を返す
-  return janCode.slice(-4);
+  return normalizedJanCode.slice(-4);
 }

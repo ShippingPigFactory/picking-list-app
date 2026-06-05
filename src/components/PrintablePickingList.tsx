@@ -224,7 +224,7 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
                       <td>{item['送付先氏名']}</td>
                       <td>{item['商品名']}</td>
                       <td style={{ fontSize: 16, textAlign: 'center', fontWeight: 'bold' }}>{displayQuantity}</td>
-                      <td style={{ fontSize: 16, textAlign: 'center', fontWeight: 'bold' }}>{formatJanDisplay(item['JANコード'].slice(-4))}</td>
+                      <td style={{ fontSize: 16, textAlign: 'center', fontWeight: 'bold' }}>{formatJanDisplay(item['JANコード'])}</td>
                       <td className="other"></td>
                     </tr>
                   );
@@ -258,7 +258,7 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
                       <td>{item['送付先氏名']}</td>
                       <td>{item['商品名']}</td>
                       <td style={{ fontSize: 16, textAlign: 'center', fontWeight: 'bold' }}>{item['計算後総個数']}</td>
-                      <td style={{ fontSize: 16, textAlign: 'center', fontWeight: 'bold' }}>{formatJanDisplay(item['JANコード'] ? item['JANコード'].slice(-4) : '')}</td>
+                      <td style={{ fontSize: 16, textAlign: 'center', fontWeight: 'bold' }}>{formatJanDisplay(item['JANコード'])}</td>
                       <td className="other"></td>
                     </tr>
                   );
