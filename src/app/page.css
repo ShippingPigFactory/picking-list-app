@@ -293,6 +293,14 @@ tbody tr:nth-child(even) {
 
 .assort, .doubleCheck, .case, .other {
   background-color: #e6e6e6;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}
+
+.breakdown-header {
+  background-color: #e6e6e6;
+  writing-mode: horizontal-tb;
+  text-align: center;
 }
 
 .picking, .selfCheck, .itemName, .jan, .count {

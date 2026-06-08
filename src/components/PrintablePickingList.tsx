@@ -16,6 +16,21 @@ interface PrintableProps {
   sheet: string[][];
 }
 
+const ProductTableColGroup = () => (
+  <colgroup>
+    <col style={{ width: '3%' }} />
+    <col style={{ width: '3%' }} />
+    <col style={{ width: '3%' }} />
+    <col style={{ width: '3%' }} />
+    <col style={{ width: '40%' }} />
+    <col style={{ width: '7%' }} />
+    <col style={{ width: '5%' }} />
+    <col style={{ width: '5%' }} />
+    <col style={{ width: '5%' }} />
+    <col style={{ width: '5%' }} />
+  </colgroup>
+);
+
 // forwardRef を使って親から ref を受け取れるようにする
 const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
   ({
@@ -83,29 +98,40 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
         {/* 2.5 梱包サイズ集計エリア */}
         <div className="work-log-grid" style={{ marginTop: '0px' }}>
           {/* Row 1: Headers (8 items * 3 cols = 24 cols) */}
-          <div className="grid-header col-span3" style={{ fontSize: '0.9rem', lineHeight: '1.2' }}>ネコポス<br/>(封筒)</div>
+          {/* <div className="grid-header col-span3" style={{ fontSize: '0.9rem', lineHeight: '1.2' }}>ネコポス<br/>(封筒)</div>
           <div className="grid-header col-span3" style={{ fontSize: '0.9rem', lineHeight: '1.2' }}>ネコポス<br/>(箱)</div>
           <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>コンパクト</div>
           <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>60サイズ</div>
           <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>80サイズ</div>
           <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>100サイズ</div>
           <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>120サイズ</div>
-          <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>140サイズ</div>
+          <div className="grid-header col-span3" style={{ fontSize: '0.9rem' }}>140サイズ</div> */}
 
           {/* Row 2: Inputs */}
-          <div className="grid-input col-span3" style={{ height: '25px' }}></div>
+          {/* <div className="grid-input col-span3" style={{ height: '25px' }}></div>
           <div className="grid-input col-span3"></div>
           <div className="grid-input col-span3"></div>
           <div className="grid-input col-span3"></div>
           <div className="grid-input col-span3"></div>
           <div className="grid-input col-span3"></div>
           <div className="grid-input col-span3"></div>
-          <div className="grid-input col-span3"></div>
+          <div className="grid-input col-span3"></div> */}
         </div>
 
         {/* 1. ヘッダーだけのテーブル */}
         <table className="print-table">
+          <ProductTableColGroup />
           <thead>
+            <tr>
+              <th className="assort"></th>
+              <th className="picking"></th>
+              <th className="selfCheck"></th>
+              <th className="doubleCheck"></th>
+              <th className="itemName"></th>
+              <th className="jan"></th>
+              <th className="count"></th>
+              <th className="breakdown-header" colSpan={3}>内訳</th>
+            </tr>
             <tr>
               <th className="assort">仕分け</th>
               <th className="picking">ピッキング</th>
@@ -113,16 +139,17 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
               <th className="doubleCheck">ダブル</th>
               <th className="itemName">商品名</th>
               <th className="jan">JAN</th>
-              <th className="count">数量</th>
-              <th className="case">ケース</th>
-              <th className="case">1個</th>
-              <th className="other">その他</th>
+              <th className="count" style={{ writingMode: "vertical-rl" }}>総個数</th>
+              <th className="case">メーカー箱</th>
+              <th className="case">1個箱</th>
+              <th className="other">バラ</th>
             </tr>
           </thead>
         </table>
 
         {/* 2. ボディだけのテーブル（これが複数ページにまたがる） */}
         <table className="print-table">
+          <ProductTableColGroup />
           <tbody>
             {pickingList.map((item, index) => (
               <tr key={`${item.JANコード}-${item.商品名}-${index}`}>
@@ -159,6 +186,7 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
         </table>
         
         <table className="print-table">
+          <ProductTableColGroup />
           <tbody>
             <tr>
               <td className="other">&nbsp;</td>
@@ -177,6 +205,7 @@ const PrintablePickingList = React.forwardRef<HTMLDivElement, PrintableProps>(
 
         {/* 3. フッターだけのテーブル */}
         <table className="print-table footer-table">
+          <ProductTableColGroup />
           <tfoot>
             <tr className="footer-row">
               <td className="other">合計</td>
